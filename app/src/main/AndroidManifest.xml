@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <queries>
+        <package android:name="com.example.pilinara" /><package android:name="com.example.pilinara.debug" /><package android:name="com.example.pilinara.dev" />
+        <package android:name="com.example.piliplus" /><package android:name="com.example.piliplus.debug" /><package android:name="com.example.piliplus.dev" />
         <intent><action android:name="android.intent.action.VIEW" /><category android:name="android.intent.category.BROWSABLE" /><data android:scheme="bilibili" /></intent>
         <intent><action android:name="android.intent.action.VIEW" /><category android:name="android.intent.category.BROWSABLE" /><data android:scheme="http" /></intent>
         <intent><action android:name="android.intent.action.VIEW" /><category android:name="android.intent.category.BROWSABLE" /><data android:scheme="https" /></intent>

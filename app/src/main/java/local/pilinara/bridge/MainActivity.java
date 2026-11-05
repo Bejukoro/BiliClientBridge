@@ -15,6 +15,7 @@ public class MainActivity extends Activity {
     private EditText input;
     private TextView status;
     private TextView selected;
+    private boolean scanning;
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         LinearLayout layout = new LinearLayout(this);
@@ -29,7 +30,7 @@ public class MainActivity extends Activity {
         layout.addView(status);
         selected = new TextView(this); layout.addView(selected); refreshSelection();
         Button choose = new Button(this); choose.setText("选择 / 更换默认客户端");
-        choose.setOnClickListener(v -> choose(ClientRegistry.installed(this), null, false)); layout.addView(choose);
+        choose.setOnClickListener(v -> scan(null, false)); layout.addView(choose);
         input = new EditText(this); input.setHint("粘贴 bilibili://、B 站网址或分享文本");
         input.setMinLines(3); layout.addView(input);
         Button open = new Button(this); open.setText("打开对应内容");
@@ -61,7 +62,36 @@ public class MainActivity extends Activity {
         launch(url);
     }
     private void launch(String url) {
-        List<ResolveInfo> clients = url == null ? ClientRegistry.installed(this) : ClientRegistry.handlers(this, url);
+        scan(url, true);
+    }
+    private void scan(String url, boolean openAfter) {
+        if (scanning) return;
+        scanning = true;
+        AlertDialog progress = new AlertDialog.Builder(this).setTitle("检测客户端")
+            .setMessage("正在查找已安装的兼容客户端…").setCancelable(false).create();
+        progress.show();
+        new Thread(() -> {
+            try {
+                List<ResolveInfo> clients = url == null ? ClientRegistry.installed(this) : ClientRegistry.handlers(this, url);
+                runOnUiThread(() -> {
+                    scanning = false;
+                    if (isFinishing() || isDestroyed()) return;
+                    progress.dismiss();
+                    if (openAfter) selectForLaunch(clients, url); else choose(clients, url, false);
+                });
+            } catch (RuntimeException e) {
+                runOnUiThread(() -> {
+                    scanning = false;
+                    if (isFinishing() || isDestroyed()) return;
+                    progress.dismiss();
+                    new AlertDialog.Builder(this).setTitle("检测失败")
+                        .setMessage("系统未允许查询客户端：" + e.getClass().getSimpleName() + "。请确认客户端与助手安装在同一用户空间，稍后重试。")
+                        .setPositiveButton("知道了", null).show();
+                });
+            }
+        }, "client-discovery").start();
+    }
+    private void selectForLaunch(List<ResolveInfo> clients, String url) {
         String preferred = getPreferences(0).getString("client", "");
         for (ResolveInfo client : clients) {
             if (client.activityInfo.packageName.equals(preferred)) { openClient(client, url); return; }
@@ -72,7 +102,12 @@ public class MainActivity extends Activity {
         choose(clients, url, true);
     }
     private void choose(List<ResolveInfo> clients, String url, boolean openAfter) {
-        if (clients.isEmpty()) { status.setText("未找到声明支持此类链接的客户端。请先安装 PiliNara、PiliPlus 等兼容应用。链接保留在下方。"); return; }
+        if (clients.isEmpty()) {
+            String message = "未检测到兼容客户端。请确认 PiliNara / PiliPlus 与本助手安装在同一用户空间（非工作资料、系统分身或应用分身）。链接保留在输入框中。";
+            status.setText(message);
+            new AlertDialog.Builder(this).setTitle("未找到客户端").setMessage(message).setPositiveButton("知道了", null).show();
+            return;
+        }
         String[] labels = new String[clients.size()];
         for (int i = 0; i < labels.length; i++) {
             ResolveInfo r = clients.get(i);

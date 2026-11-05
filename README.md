@@ -29,14 +29,14 @@
 
 - 同包名不能代替官方签名。来源若校验签名、调用未适配的私有组件、限制外部跳转或强制下载官方版，可能仍无法唤起本助手。
 - 本工具没有 B 站域名控制权，无法通过官方 App Links 域名验证。Android 12+ 通常需要在系统设置中手动指定支持的链接。
-- 仅转交目标客户端**声明支持当前链接**的 Activity，不会强行向其主页发送不支持的格式。客户端声明能接收链接，不代表其能解析所有具体页面。
+- 优先转交目标客户端声明的链接 Activity；PiliNara、PiliPlus（含 debug/dev 版）增加显式包名可见性，并在系统隐藏链接处理器时通过其已导出的启动 Activity 传递原链接。具体内容支持仍取决于客户端。
 - 设置列表用视频 scheme、视频网页、短链和直播网页探测应用。只支持其他特殊页面的应用可能不在设置列表，但收到实际支持的链接时仍可参与选择。
 - 排除助手自身和仅处理通用网页的浏览器；同时声明 bilibili scheme 的应用仍会作为候选。
 - 当前未完成真机、客户端端到端或实际 QQ / 微信小程序验收。不能保证所有入口、手机系统和客户端版本均有效。
 
 ## 从源码构建
 
-工程采用原生 Java，应用版本 **1.1 / versionCode 2**，target API 36。需要 **JDK 21、Android SDK Platform 37.0、Build Tools 36.1.0**；Gradle Wrapper 固定为 9.7.1，Android Gradle Plugin 为 9.4.1。首次构建需要联网下载依赖。
+工程采用原生 Java，应用版本 **1.1.1 / versionCode 3**，target API 36。需要 **JDK 21、Android SDK Platform 37.0、Build Tools 36.1.0**；Gradle Wrapper 固定为 9.7.1，Android Gradle Plugin 为 9.4.1。首次构建需要联网下载依赖。
 
 在 Android Studio 打开仓库，或配置 `JAVA_HOME` 和 `ANDROID_HOME` 后，在仓库根目录运行：
 
@@ -79,3 +79,8 @@ app/build/outputs/apk/debug/app-debug.apk
 本项目采用 [MIT License](LICENSE)。未复制或包含第三方客户端代码、资源或官方图标。
 
 接口参考：[PiliNara Android Manifest](https://github.com/Starfallan/PiliNara/blob/main/android/app/src/main/AndroidManifest.xml)、[PiliPlus Android 配置](https://github.com/bggRGjQaUbCoE/PiliPlus/blob/main/android/app/build.gradle.kts)。
+
+## 1.1.1 修复
+
+针对 ColorOS 17 用户反馈的选择入口无弹窗问题，增加已知客户端包名查询与启动入口回退；查询在后台执行，点击后立即显示检测提示。无候选及查询异常也显示对话框。此问题尚未在 ColorOS 17 真机复测，请以设备上的更新后结果为准。
+
