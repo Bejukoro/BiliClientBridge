@@ -1,0 +1,28 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <queries>
+        <intent><action android:name="android.intent.action.VIEW" /><category android:name="android.intent.category.BROWSABLE" /><data android:scheme="bilibili" /></intent>
+        <intent><action android:name="android.intent.action.VIEW" /><category android:name="android.intent.category.BROWSABLE" /><data android:scheme="http" /></intent>
+        <intent><action android:name="android.intent.action.VIEW" /><category android:name="android.intent.category.BROWSABLE" /><data android:scheme="https" /></intent>
+    </queries>
+    <application android:label="B站客户端跳转助手" android:icon="@drawable/ic_bridge" android:allowBackup="false" android:theme="@android:style/Theme.Material.Light.NoActionBar">
+        <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop">
+            <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" /><category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="bilibili" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" /><category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" /><data android:scheme="https" />
+                <data android:host="bilibili.com" /><data android:host="*.bilibili.com" /><data android:host="b23.tv" />
+                <data android:host="bilibili.cn" /><data android:host="*.bilibili.cn" />
+                <data android:host="bilibili.tv" /><data android:host="*.bilibili.tv" />
+            </intent-filter>
+            <intent-filter><action android:name="android.intent.action.SEND" /><category android:name="android.intent.category.DEFAULT" /><data android:mimeType="text/plain" /></intent-filter>
+        </activity>
+        <activity-alias android:name="tv.danmaku.bili.MainActivity" android:targetActivity=".MainActivity" android:exported="true" />
+        <activity-alias android:name="tv.danmaku.bili.ui.splash.SplashActivity" android:targetActivity=".MainActivity" android:exported="true" />
+    </application>
+</manifest>
