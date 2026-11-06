@@ -1,6 +1,8 @@
 # B站客户端跳转助手 · Bili Client Bridge
 
-将外部 B 站链接转交给你选择的 Android 客户端，支持 PiliNara、PiliPlus 等兼容应用。
+本项目主要用于 **QQ、微信小程序等只调用特定包名 App 来打开 B 站链接的场景**。这类入口通常指定哔哩哔哩官方 App 的包名，导致已安装的 PiliNara、PiliPlus 等第三方客户端无法直接接收跳转。
+
+助手使用官方包名 `tv.danmaku.bili` 接收这些唤起请求，再将链接转交给你选择的兼容客户端，缓解这类入口无法调用第三方 App 的问题。
 
 ## 下载与使用
 
