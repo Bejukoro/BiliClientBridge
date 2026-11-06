@@ -1,0 +1,19 @@
+<resources>
+    <string name="title">B站跳转</string>
+    <string name="default_client">默认客户端</string>
+    <string name="no_client">尚未选择</string>
+    <string name="client_hint">选好一次，之后自动跳转</string>
+    <string name="choose_client">选择客户端</string>
+    <string name="open_client">打开客户端</string>
+    <string name="link_title">B站链接</string>
+    <string name="link_hint">链接或分享文本</string>
+    <string name="paste">粘贴</string>
+    <string name="open_link">打开链接</string>
+    <string name="link_settings">链接设置</string>
+    <string name="help">使用帮助</string>
+    <string name="change_client">更换客户端</string>
+    <string name="help_body">1. 选择已安装的客户端。\n2. 在“链接设置”中允许打开 B 站链接。\n3. 从其他应用打开，或在这里粘贴链接。\n\n助手不能与官方 B 站 App 共存。部分 QQ / 微信入口校验官方签名，可能无法跳转。</string>
+    <string name="empty_clipboard">剪贴板里没有文字</string>
+    <string name="invalid_link">没有找到 B 站链接，换一个试试</string>
+    <string name="client_saved">默认客户端已更新</string>
+</resources>

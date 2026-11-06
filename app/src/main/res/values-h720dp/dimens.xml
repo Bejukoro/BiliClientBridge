@@ -1,0 +1,14 @@
+<resources>
+    <dimen name="home_padding">20dp</dimen>
+    <dimen name="home_title_size">30sp</dimen>
+    <dimen name="home_title_top">24dp</dimen>
+    <dimen name="home_title_bottom">20dp</dimen>
+    <dimen name="client_card_padding">20dp</dimen>
+    <dimen name="client_name_size">26sp</dimen>
+    <dimen name="client_actions_top">12dp</dimen>
+    <dimen name="client_action_height">52dp</dimen>
+    <dimen name="home_section_gap">12dp</dimen>
+    <dimen name="link_input_padding">12dp</dimen>
+    <dimen name="open_link_height">56dp</dimen>
+    <integer name="link_visible_lines">3</integer>
+</resources>
