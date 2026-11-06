@@ -15,6 +15,18 @@ final class ClientRegistry {
     static Intent view(String url) {
         return new Intent(Intent.ACTION_VIEW, Uri.parse(url)).addCategory(Intent.CATEGORY_BROWSABLE);
     }
+    static ResolveInfo preferredHandler(Context context, String packageName, String url) {
+        if (packageName.equals(context.getPackageName())) return null;
+        Intent intent = view(url).setPackage(packageName);
+        for (ResolveInfo handler : context.getPackageManager().queryIntentActivities(intent,
+                android.content.pm.PackageManager.MATCH_DEFAULT_ONLY | android.content.pm.PackageManager.MATCH_ALL)) {
+            if (handler.activityInfo.exported) return handler;
+        }
+        for (String known : KNOWN_CLIENTS) {
+            if (known.equals(packageName)) return knownClient(context, packageName);
+        }
+        return null;
+    }
     static List<ResolveInfo> handlers(Context context, String url) {
         List<ResolveInfo> result = new ArrayList<>();
         Set<String> browsers = new HashSet<>();

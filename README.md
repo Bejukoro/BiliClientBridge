@@ -6,7 +6,7 @@
 
 ## 下载与使用
 
-在 [Releases](https://github.com/Bejukoro/BiliClientBridge/releases/latest) 下载最新 APK。最低支持 Android 8.0，当前正式版为 **1.2.0**。
+在 [Releases](https://github.com/Bejukoro/BiliClientBridge/releases/latest) 下载最新 APK。最低支持 Android 8.0，当前正式版为 **1.2.1**。
 
 1. 安装 PiliNara、PiliPlus 或其他兼容客户端。
 2. 安装并打开助手，选择默认客户端。
@@ -19,6 +19,8 @@
 
 - 自动发现兼容客户端，支持正式版、调试版和其他分支。
 - 保存默认客户端，支持随时更换。
+- 有默认客户端时快速转交外部链接，减少首页和检测弹窗的出现。
+- 排除助手的最近任务卡片，成功跳转后结束自身页面及独立任务。
 - 在选择列表中显示应用图标、名称和完整包名。
 - 支持 `bilibili://`、B 站网页、`b23.tv` 短链、分享文本和手动粘贴。
 - 保留内容 ID、分 P、播放时间等链接参数，由目标客户端解析内容。
@@ -38,7 +40,7 @@
 
 ## 从源码构建
 
-工程采用 Java 和官方 Material Components，当前应用版本为 `1.2.0`，versionCode 为 `10`，target API 为 `36`。
+工程采用 Java 和官方 Material Components，当前应用版本为 `1.2.1`，versionCode 为 `14`，target API 为 `36`。
 
 构建环境需要 JDK 21、Android SDK Platform 37.0 和 Build Tools 36.1.0。工程附带 Gradle 9.7.1 Wrapper，使用 Android Gradle Plugin 9.4.1。
 
@@ -75,3 +77,4 @@
 本项目采用 [MIT License](LICENSE)。
 
 接口参考来自 [PiliNara Android Manifest](https://github.com/Starfallan/PiliNara/blob/main/android/app/src/main/AndroidManifest.xml) 和 [PiliPlus Android 配置](https://github.com/bggRGjQaUbCoE/PiliPlus/blob/main/android/app/build.gradle.kts)。
+

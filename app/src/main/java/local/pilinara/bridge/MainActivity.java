@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     @Override public void onCreate(Bundle state) {
         DynamicColors.applyToActivityIfAvailable(this);
         super.onCreate(state);
+        if (state == null && forwardToPreferredClient(getIntent())) return;
         boolean dark = (getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES;
         androidx.core.view.WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView()).setAppearanceLightNavigationBars(!dark);
         if (android.os.Build.VERSION.SDK_INT == 26) getWindow().setNavigationBarColor(android.graphics.Color.BLACK);
@@ -58,7 +59,37 @@ public class MainActivity extends AppCompatActivity {
         if (state == null) receive(getIntent());
     }
     @Override protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent); setIntent(intent); receive(intent);
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (!forwardToPreferredClient(intent)) receive(intent);
+    }
+    private boolean forwardToPreferredClient(Intent incoming) {
+        if (scanning) return false;
+        String raw = incoming.getDataString();
+        if (raw == null && Intent.ACTION_SEND.equals(incoming.getAction())) {
+            CharSequence shared = incoming.getCharSequenceExtra(Intent.EXTRA_TEXT);
+            raw = shared == null ? null : shared.toString();
+        }
+        String url = LinkParser.extract(raw);
+        String preferred = getPreferences(0).getString("client", "");
+        if (url == null || preferred.isEmpty()) return false;
+        try {
+            ResolveInfo client = ClientRegistry.preferredHandler(this, preferred, url);
+            if (client == null) return false;
+            Intent outgoing = ClientRegistry.view(url).setClassName(
+                client.activityInfo.packageName, client.activityInfo.name);
+            outgoing.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(outgoing);
+            closeAfterForwarding();
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+    private void closeAfterForwarding() {
+        // Only remove a task rooted in this activity. A caller's task may contain us.
+        if (isTaskRoot()) finishAndRemoveTask();
+        else finish();
     }
     private void receive(Intent intent) {
         String raw = intent.getDataString();
@@ -146,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         Intent outgoing = url == null ? getPackageManager().getLaunchIntentForPackage(client.activityInfo.packageName) : ClientRegistry.view(url).setClassName(client.activityInfo.packageName, client.activityInfo.name);
         if (outgoing == null) { status.setText("这个客户端需要通过链接打开"); return; }
         outgoing.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        try { startActivity(outgoing); finish(); }
+        try { startActivity(outgoing); closeAfterForwarding(); }
         catch (ActivityNotFoundException | SecurityException e) { status.setText("打开失败，请重新选择客户端"); }
     }
     @Override protected void onDestroy() {
